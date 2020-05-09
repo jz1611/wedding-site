@@ -1,16 +1,23 @@
 require('dotenv').config();
-const massive = require('massive');
+const MongoClient = require('mongodb').MongoClient;
 const express = require('express');
 
-const { SERVER_PORT, CONNECTION_STRING } = process.env;
+const { getMessages, addMessage } = require('./controllers/messageController');
 
+const { SERVER_PORT, CONNECTION_STRING } = process.env;
 const app = express();
 
+app.use(require('body-parser').text());
 app.use(express.json());
 
-massive(CONNECTION_STRING).then(db => {
-    console.log('Connected to database.');
-    app.set('db', db);
-}).catch(err => console.log(err));
+MongoClient.connect(CONNECTION_STRING, {useUnifiedTopology: true})
+    .then(client => {
+        console.log('Connected to databse.');
+        app.set('db', client.db('wedding'));
 
-app.listen(SERVER_PORT, () => console.log(`Server listening on port ${SERVER_PORT}...`));
+        app.get('/api/messages', getMessages);
+        app.post('/api/message', addMessage);
+
+        app.listen(SERVER_PORT, () => console.log(`Server listening on port ${SERVER_PORT}...`));
+    })
+    .catch(error => console.error(error));
