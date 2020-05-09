@@ -54,7 +54,7 @@ CREATE TABLE suggestions (
 
 ### Messages
 ```sql
-CREATE TABLE message (
+CREATE TABLE messages (
     message_id SERIAL PRIMARY KEY,
     message_content TEXT NOT NULL,
     author VARCHAR(50) NOT NULL,
