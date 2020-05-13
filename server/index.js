@@ -3,6 +3,7 @@ const MongoClient = require('mongodb').MongoClient;
 const express = require('express');
 
 const { getMessages, addMessage } = require('./controllers/messageController');
+const { getSuggestions, addSuggestion } = require('./controllers/suggestionController');
 
 const { SERVER_PORT, CONNECTION_STRING } = process.env;
 const app = express();
@@ -17,6 +18,8 @@ MongoClient.connect(CONNECTION_STRING, {useUnifiedTopology: true})
 
         app.get('/api/messages', getMessages);
         app.post('/api/message', addMessage);
+        app.get('/api/suggestions', getSuggestions);
+        app.post('/api/suggestion', addSuggestion);
 
         app.listen(SERVER_PORT, () => console.log(`Server listening on port ${SERVER_PORT}...`));
     })
